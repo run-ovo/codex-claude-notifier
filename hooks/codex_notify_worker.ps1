@@ -6,12 +6,16 @@ param(
     [ValidateSet("done", "permission", "info")]
     [string]$Kind = "done",
     [ValidateSet("on", "off")]
-    [string]$Sound = "on"
+    [string]$Sound = "on",
+    [string]$LogFileName = "codex_done.log",
+    [string]$ToastTag = "codex-task-notifier",
+    [string]$SoundMutexName = "Global\CodexNotifySoundMutex",
+    [string]$LastSoundFileName = "codex_last_sound.txt"
 )
 
 $ErrorActionPreference = "SilentlyContinue"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$logFile = Join-Path $scriptDir "codex_done.log"
+$logFile = Join-Path $scriptDir $LogFileName
 
 function Write-CodexNotifyLog([string]$messageText) {
     try {
@@ -66,14 +70,14 @@ function Play-CodexSingleSound {
 function Invoke-CodexSoundOnce {
     $mutex = $null
     try {
-        $mutex = New-Object System.Threading.Mutex($false, "Global\CodexNotifySoundMutex")
+        $mutex = New-Object System.Threading.Mutex($false, $SoundMutexName)
         $entered = $mutex.WaitOne(150)
         if (-not $entered) {
             Write-CodexNotifyLog "sound skipped: mutex busy"
             return
         }
 
-        $stampFile = Join-Path $scriptDir "codex_last_sound.txt"
+        $stampFile = Join-Path $scriptDir $LastSoundFileName
         $now = [DateTime]::UtcNow
         $minGapMs = 1400
         $shouldPlay = $true
@@ -165,7 +169,7 @@ function Show-CodexWindowsToast {
     $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
     $xml.LoadXml($xmlText)
     $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
-    $toast.Tag = "codex-task-notifier"
+    $toast.Tag = $ToastTag
     $toast.Group = $Kind
 
     $appIds = @(
