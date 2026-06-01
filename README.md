@@ -112,27 +112,6 @@ bash scripts/test-wsl-notification.sh
 $CODEX_HOME/hooks/codex_done.log
 ```
 
-## 发布到 GitHub
-
-在本项目目录执行：
-
-```bash
-git init
-git add .
-git commit -m "feat: add codex wsl toast notifier"
-git branch -M main
-git remote add origin https://github.com/<your-name>/codex-wsl-toast-notifier.git
-git push -u origin main
-```
-
-以后另一台电脑就可以这样安装：
-
-```bash
-git clone https://github.com/<your-name>/codex-wsl-toast-notifier.git
-cd codex-wsl-toast-notifier
-bash install-wsl.sh
-```
-
 ## 常见问题
 
 ### 没有看到通知
