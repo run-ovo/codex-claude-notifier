@@ -1,4 +1,4 @@
-# Codex / Claude Code Windows Toast Notifier
+# Codex / Claude Code Notifier
 
 这是一个面向 **Windows 原生** 和 **WSL** 中运行的 Codex CLI / Claude Code 的系统通知 hook。
 
