@@ -1,0 +1,4 @@
+*.log
+*.bak_*
+codex_last_sound.txt
+.DS_Store
